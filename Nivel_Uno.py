@@ -63,7 +63,7 @@ class NivelUno(Nivel):
 
         lista_enemigos = [mi_enemigo,mi_enemigo_obstaculo]
         
-        # PLATAFORMASegundo-Parcail-Laboratorio\Ataque_sombrero\1.png
+        # PLATAFORMA
         plataforma_uno = Plataforma(r"Segundo-Parcail-Laboratorio\fondo_2\w.png",1200,50,(100,735))
         plataforma_dos = Plataforma(r"Segundo-Parcail-Laboratorio\fondo_2\w.png",200,50,(1300,650))
         plataforma_tres = Plataforma(r"Segundo-Parcail-Laboratorio\fondo_2\w.png",200,50,(1000,500))

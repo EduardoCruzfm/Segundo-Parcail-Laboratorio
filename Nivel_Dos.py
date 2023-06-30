@@ -55,9 +55,9 @@ class NivelDos(Nivel):
         diccionario_animaciones_enemigo_obstaculo = {}
         diccionario_animaciones_enemigo_obstaculo["quieto"] = nood_quieto
         diccionario_animaciones_enemigo_obstaculo["gira_ataca"] = nood_ataca
-        diccionario_animaciones_enemigo_obstaculo["salta"] = scorpion_ataca
+        diccionario_animaciones_enemigo_obstaculo["salta"] = nood_ataca
         diccionario_animaciones_enemigo_obstaculo["camina_derecha"] = nood_ataca
-        diccionario_animaciones_enemigo_obstaculo["camina_izquierda"] = scorpion_ataca
+        diccionario_animaciones_enemigo_obstaculo["camina_izquierda"] = nood_ataca
 
         mi_enemigo_obstaculo = Enemigo(tamaño,diccionario_animaciones_enemigo_obstaculo,posicion_inicial_enemigo_obstaculo,10)
 
@@ -78,7 +78,7 @@ class NivelDos(Nivel):
         diccionario_animaciones_item = {}
         diccionario_animaciones_item["gira"] = item
 
-        moneda = Item((30,30),diccionario_animaciones_item,(1070,450))
+        moneda = Item((30,30),diccionario_animaciones_item,(300,350))
         moneda_dos = Item((30,30),diccionario_animaciones_item,(1600,550))
        
         lista_items = [moneda,moneda_dos]

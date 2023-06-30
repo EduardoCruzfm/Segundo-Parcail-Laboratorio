@@ -56,9 +56,9 @@ class NivelTres(Nivel):
         diccionario_animaciones_enemigo_obstaculo = {}
         diccionario_animaciones_enemigo_obstaculo["quieto"] = motaro_quieto
         diccionario_animaciones_enemigo_obstaculo["gira_ataca"] = scorpion_ataca
-        diccionario_animaciones_enemigo_obstaculo["salta"] = scorpion_ataca
+        diccionario_animaciones_enemigo_obstaculo["salta"] = motaro_ataca
         diccionario_animaciones_enemigo_obstaculo["camina_derecha"] = motaro_ataca
-        diccionario_animaciones_enemigo_obstaculo["camina_izquierda"] = scorpion_ataca
+        diccionario_animaciones_enemigo_obstaculo["camina_izquierda"] = motaro_ataca
 
         mi_enemigo_obstaculo = Enemigo(tamaño_dos,diccionario_animaciones_enemigo_obstaculo,posicion_inicial_enemigo_obstaculo,10)
 
@@ -90,8 +90,8 @@ class NivelTres(Nivel):
         diccionario_animaciones_trampa = {}
         diccionario_animaciones_trampa["gira"] = trampa
 
-        trampa_uno = Trampa((50,50),diccionario_animaciones_trampa,(1000,150))
-        trampa_dos = Trampa((50,50),diccionario_animaciones_trampa,(900,350))
+        trampa_uno = Trampa((50,50),diccionario_animaciones_trampa,(900,150))
+        trampa_dos = Trampa((50,50),diccionario_animaciones_trampa,(1000,350))
 
         lista_trampa = [trampa_uno,trampa_dos]
 

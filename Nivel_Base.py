@@ -77,7 +77,6 @@ class Nivel:
                 print("Disparo")
                 self.lista_enemigos[0].que_hace = "quieto"
                 self.lista_enemigos[1].que_hace = "ataca_derecha"
-                # self.enemigo.que_hace = "ataca"---------------------------> para el nivel ma complejo
                 self.lista_enemigos[0].burbuja()
                 self.lista_enemigos[1].scorpion()
 
@@ -253,8 +252,6 @@ class Nivel:
                 ganaste = fuente.render(f"GAME OVER",False,"Red")
                 pantalla.blit(ganaste,(600,400))
                 self.numero_aleatorio = 0
-                
-                # menu------------------------------------------------------------------
 
         except IndexError as e:
                 print(f"Error en el indice: -> {e}")        
@@ -380,12 +377,9 @@ class Nivel:
             self.dic_data["Vidas_jugador"] = self.vidas_jugador
             self.dic_data["Posicion Enemigo"] = self.lista_enemigos[0][2]
             self.dic_data["Vidas_Enemigo"] = self.vidas_enemigo
-            # self.dic_data["Plataformas"] = self.plataformas
-            # self.dic_data["Proyectil"] = self.sombrero.rect
             self.dic_data["Score"] = self.puntos_jugador
             self.dic_data["Cronometro"] = self.tiempo.__str__()
-            self.dic_data["Items"] = {"trampa_uno"}
-            # self.dic_data["Trampas"] = self.trampas
+            
 
             self.guaradar_json()
     
