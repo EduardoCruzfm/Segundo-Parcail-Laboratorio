@@ -1,10 +1,15 @@
-import pygame
+import pygame,sys
+from pygame.locals import*
 import time
 from modo import*
 import random
 import json
 from Class_cronometro import Cronometro
+from API_FORMS.GUI_widget import*
+from API_FORMS.GUI_form_fin import*
 
+BLANCO = "White"
+NEGRO = "Black"
 
 # trae un paramero poder y meterlo en cada enemigo
 class Nivel:
@@ -38,9 +43,15 @@ class Nivel:
         self.auxiliar = 1
         self.tiempo = Cronometro(0)
         # FLAG MENSAJE FINAL
-        self.flag_msj_final = True
+        self.en_pausa = False
+        self.relog = pygame.time.Clock()
         # JSON
         self.dic_data = {}
+        # BANDERA VIDA ENEMIGO 0
+        self.vidas_enemigo_cero = True
+        
+        # BANDERA DE EVENTO
+        self.bandera_timer = True
         
   
     def update(self,lista_eventos)->None:
@@ -56,29 +67,46 @@ class Nivel:
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_TAB:
                     cambiar_modo()
-                
+
             if evento.type == self.timer_event_moviento_enemigo:            
-                self.numero_aleatorio = random.randint(1, 2)
-    
-                # MOVIMIENTO ALEATORIO
-                match self.numero_aleatorio:
-                    case 1:
-                        self.lista_enemigos[0].que_hace = "ataca_derecha"
-                        self.lista_enemigos[0].mover_x(90)
-                        self.lista_enemigos[1].que_hace = "quieto"
-                    case 2 :
-                        self.lista_enemigos[0].que_hace = "ataca"
-                        self.lista_enemigos[0].mover_x(-90)
-                  
-                        self.lista_enemigos[1].que_hace = "quieto"
+                if self.bandera_timer:
+                    self.numero_aleatorio = random.randint(1,2)
+                    # MOVIMIENTO ALEATORIO
+                    match self.numero_aleatorio:
+                        case 1:
+                            self.lista_enemigos[0].que_hace = "ataca_derecha"
+                            self.lista_enemigos[0].mover_x(300)
+                            
+                            # if len(self.lista_enemigos) == 1:
+                            #     self.lista_enemigos[1].que_hace = "quieto"
+                        case 2 :
+                            self.lista_enemigos[0].que_hace = "ataca"
+                            self.lista_enemigos[0].mover_x(-190)
+
+                        #     if len(self.lista_enemigos) == 1:
+                        #         self.lista_enemigos[1].que_hace = "quieto"
+                        # case 3:
+                            for enemigo in self.lista_enemigos:
+                                enemigo.que_hace = "quieto"
 
             # CADA 5 SEG DISPARO
             if evento.type == self.timer_event:
-                print("Disparo")
-                self.lista_enemigos[0].que_hace = "quieto"
-                self.lista_enemigos[1].que_hace = "ataca_derecha"
-                self.lista_enemigos[0].burbuja()
-                self.lista_enemigos[1].scorpion()
+                if self.bandera_timer:
+                    print("Disparo")
+
+                    for lista in self.lista_enemigos:
+                        lista.que_hace = "quieto"
+                        lista.proyectil()
+                        lista.sonido()
+
+
+                    # self.lista_enemigos[0].que_hace = "quieto"
+                    # self.lista_enemigos[0].proyectil()
+                    # self.lista_enemigos[0].sonido()
+                    # if len(self.lista_enemigos) > 0:
+                    #     self.lista_enemigos[1].que_hace = "ataca_derecha"
+                    #     self.lista_enemigos[1].proyectil()
+                    #     self.lista_enemigos[1].sonido()
 
         # LLAMADA
         self.leer_inputs()
@@ -92,6 +120,8 @@ class Nivel:
         self.guardar_partida()
         self.tiempo.mostrar_tiempo(self._slave)
         self.tiempo.actualizar()
+
+        
 
 
     def actualizar_pantalla(self)->None:
@@ -123,14 +153,15 @@ class Nivel:
         self.jugador.update(self._slave,self.plataformas)
         self.jugador.lista_sombrero.update()
         self.jugador.lista_sombrero.draw(self._slave)
-        # ENEMIGO PRICIPAL
-        self.lista_enemigos[0].update(self._slave,self.plataformas)
-        self.lista_enemigos[0].lista_burbuja.update()
-        self.lista_enemigos[0].lista_burbuja.draw(self._slave)
-        # ENEMIGO OBSTACULO
-        self.lista_enemigos[1].update(self._slave,self.plataformas)
-        self.lista_enemigos[1].lista_lanza.update()
-        self.lista_enemigos[1].lista_lanza.draw(self._slave)
+
+        # ENEMIGOS
+        for enemigo in self.lista_enemigos:
+            enemigo.update(self._slave,self.plataformas)
+            enemigo.ataque.update()
+            enemigo.ataque.draw(self._slave)
+
+        # COLOR
+        self.color = BLANCO
         
     # INPUTS
     def leer_inputs(self)->None:
@@ -159,10 +190,27 @@ class Nivel:
         elif keys[pygame.K_s]:
             self.jugador.que_hace = "sombrero"
         
+        elif keys[pygame.K_d]:
+            self.jugador.que_hace = "quieto_izq"
+        
         else: 
             self.jugador.que_hace = "quieto"
 
     
+    # PUNTOS
+    def puntos(self,pantalla):
+        '''
+        Brief: Muestra los puntos acumulados del jugador actualizados
+
+        Parameters:
+            self -> Instancia de la clase     
+            pantalla -> Donde se va a blitear los cambios actualizados    
+        '''
+        fuente = pygame.font.SysFont("Forte",30)
+        puntuacion = fuente.render(f"Puntos: {self.puntos_jugador}",False,self.color)
+        pantalla.blit(puntuacion,(200,6))
+
+
     # MOSTRAR MODO DEBUG
     def dibujar_rectantulos(self)->None:
         '''
@@ -183,13 +231,10 @@ class Nivel:
                     pygame.draw.rect(self._slave,"Green",self.jugador.lados[lado],2)
 
                 # ENEMIGO
-                for lado in self.lista_enemigos[0].lados:
-                    pygame.draw.rect(self._slave,"Red",self.lista_enemigos[0].lados[lado],2)
-
-                # ENEMIGO_DOS
-                for lado in self.lista_enemigos[1].lados:
-                    pygame.draw.rect(self._slave,"Yellow",self.lista_enemigos[1].lados[lado],2)
-                
+                for lista in self.lista_enemigos:
+                    for lado in lista.lados:
+                        pygame.draw.rect(self._slave,"Red",lista.lados[lado],2)
+ 
                 # ITEMS
                 for item in self.items:
                     for lado in item.lados:
@@ -201,7 +246,7 @@ class Nivel:
                         pygame.draw.rect(self._slave,"Orange",trampa.lados[lado],2)
 
             except IndexError as e:
-                print(f"Error en el indice: -> {e}")
+                print(f"Error en el indice [LADOS]: -> {e}")
 
     # COLICION DE PROYECTIL CON ENEMIGO
     def colicion_sombrero_enemigo(self,pantalla):
@@ -223,38 +268,46 @@ class Nivel:
                 self.vidas_enemigo = 0
                 
             # SI COLICIONA EL ATAQUE DEL JUGADOR CON EL ENEMIGO
-            for sombrero in self.jugador.lista_sombrero:        
-                if self.lista_enemigos[0].lados["left"].colliderect(sombrero.rect):
-                    print("COLICIONO EL SOMBRERO")
-                    self.vidas_enemigo -= 0.5
-                    self.puntos_jugador += 200
-                    sombrero.eliminar()
-
-            # SI COLICIONA EL ATAQUE DEL JUGADOR_DOS CON EL ENEMIGO
-            for sombrero in self.jugador.lista_sombrero:        
-                if self.lista_enemigos[1].lados["left"].colliderect(sombrero.rect):
-                    print("COLICIONO EL SOMBRERO")
-                    self.vidas_enemigo_dos -= 0.5
-                    self.puntos_jugador += 200
-                    sombrero.eliminar()
             
+            for sombrero in self.jugador.lista_sombrero: 
+                for enemigo in self.lista_enemigos:
+                    if enemigo.lados["left"].colliderect(sombrero.rect):
+                        print("COLICIONO EL SOMBRERO")
+                        self.vidas_enemigo -= 0.5
+                        self.vidas_enemigo_dos -= 0.5
+                        self.puntos_jugador += 200
+                        sombrero.eliminar()
+
+          
+
+            if self.vidas_enemigo_dos == 0 and self.vidas_enemigo_cero:
+                self.vidas_enemigo_cero = False
+                enemigo_eliminado = self.lista_enemigos.pop(1)
+                
+
+
             # MENSAJE DE QUE GANA EL JUAGDOR
             if self.vidas_enemigo == 0 :
+                self._slave.fill(NEGRO)
                 fuente = pygame.font.SysFont("Forte",160)
                 ganaste = fuente.render(f"YOU WIN",False,"Red")
                 pantalla.blit(ganaste,(600,400))
-                self.segundos_1 += 9000
+                self.color = NEGRO
+                self.tiempo.color = NEGRO
+                self.bandera_timer = False
                 
-
             # MENSAJE DE QUE GANA EL JUAGDOR
             if self.vidas_jugador == 0:
+                self._slave.fill(NEGRO)
                 fuente = pygame.font.SysFont("Forte",160)
                 ganaste = fuente.render(f"GAME OVER",False,"Red")
                 pantalla.blit(ganaste,(600,400))
-                self.numero_aleatorio = 0
+                self.color = NEGRO
+                self.tiempo.color = NEGRO
+                self.bandera_timer = False
 
         except IndexError as e:
-                print(f"Error en el indice: -> {e}")        
+                print(f"Error en el indice []: -> {e}")        
 
 
     # COLICION DE ATAQUE ENEIMGO A JUGADOR
@@ -269,33 +322,21 @@ class Nivel:
         '''
 
         try :
-            # SI COLICIONA EL ATAQUE DEL ENEMIGO CON EL JUGADOR
-            for burbuja in self.lista_enemigos[0].lista_burbuja:        
-                if self.jugador.lados["left"].colliderect(burbuja.rect):
-                    print("Una vuda menos")
-                    self.vidas_jugador -= 0.5
-                    burbuja.eliminar()
+            for lista_ataque in self.lista_enemigos:
+                for ataque in lista_ataque.ataque:
 
-            # SI COLICIONA EL ATAQUE DEL ENEMIGO_DOS CON EL JUGADOR
-            for lanza in self.lista_enemigos[1].lista_lanza:        
-                if self.jugador.lados["left"].colliderect(lanza.rect):
-                    print("Una vuda menos")
-                    self.vidas_jugador -= 0.5
-                    lanza.eliminar()
+
+                    if self.jugador.lados["left"].colliderect(ataque.rect):
+                        print("Una vida menos")
+                        self.vidas_jugador -= 0.5
+                        ataque.eliminar()
 
 
             # SI CAE "SI SOBREPASA LA PANTALLA EN ELE EJE Y"
             if self.jugador.rectangulo.y > 900:
 
                 self.vidas_jugador -= 0.5
-
-                for lado in self.jugador.lados:
-                    self.jugador.lados[lado].y = 550
-                    
-                self.jugador.lados["top"].y = 580
-                self.jugador.lados["left"].y = 580
-                self.jugador.lados["right"].y = 580
-                self.jugador.lados["bottom"].y = 650
+                self.reposionamiento()
             
         except AttributeError as e:
             print(f"Error en atributos: -> {e}  en funcion colicon_burbuja_jugador()")
@@ -344,22 +385,9 @@ class Nivel:
             pantalla -> Donde se va a blitear los cambios actualizados    
         '''
         fuente = pygame.font.SysFont("Forte",40)
-        puntuacion = fuente.render(f"Kung Lao {self.vidas_jugador} ~ Enemigo {self.vidas_enemigo}",False,"White")
+        puntuacion = fuente.render(f"Kung Lao {self.vidas_jugador} ~ Enemigo {self.vidas_enemigo}",False,self.color)
         pantalla.blit(puntuacion,(700,6))
 
-
-    # PUNTOS
-    def puntos(self,pantalla):
-        '''
-        Brief: Muestra los puntos acumulados del jugador actualizados
-
-        Parameters:
-            self -> Instancia de la clase     
-            pantalla -> Donde se va a blitear los cambios actualizados    
-        '''
-        fuente = pygame.font.SysFont("Forte",30)
-        puntuacion = fuente.render(f"Puntos: {self.puntos_jugador}",False,"White")
-        pantalla.blit(puntuacion,(200,6))
 
     # GUARDAR EN TXT
     def guardar_partida(self):
@@ -386,4 +414,15 @@ class Nivel:
     def guaradar_json(self):
         with open('data.json', 'w') as file:
 
-            json.dump(self.dic_data, file, indent=4, ensure_ascii=False )
+            json.dump(self.dic_data, file, indent=4, ensure_ascii=False)
+
+
+    def reposionamiento(self):
+        for lado in self.jugador.lados:
+            self.jugador.lados[lado].y = 550
+                    
+        self.jugador.lados["top"].y = 580
+        self.jugador.lados["left"].y = 580
+        self.jugador.lados["right"].y = 580
+        self.jugador.lados["bottom"].y = 650
+

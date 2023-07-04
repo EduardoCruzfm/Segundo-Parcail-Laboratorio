@@ -9,6 +9,7 @@ from Clase_enemigo import Enemigo
 from configuracion_item_trampa import*
 from Clase_item import Item
 from Clase_trampa import Trampa
+from banderas import*
 
 class NivelTres(Nivel):
     def __init__(self, pantalla: pygame.Surface) -> None:
@@ -28,6 +29,7 @@ class NivelTres(Nivel):
 
         diccionario_animaciones = {}
         diccionario_animaciones["quieto"] = personaje_quieto
+        diccionario_animaciones["quieto_izq"] = personaje_sombrero_izquierda
         diccionario_animaciones["salta"] = personaje_salta
         diccionario_animaciones["camina_derecha"] = personaje_camina
         diccionario_animaciones["camina_izquierda"] = personaje_camina_izquiera
@@ -96,4 +98,15 @@ class NivelTres(Nivel):
         lista_trampa = [trampa_uno,trampa_dos]
 
         segundos_1 = 900
-        super().__init__(pantalla, mi_personaje, lista_plataformas, fondo ,lista_items,lista_trampa,sombrero,segundos_1,lista_enemigos) 
+        super().__init__(pantalla, mi_personaje, lista_plataformas, fondo ,lista_items,lista_trampa,sombrero,segundos_1,lista_enemigos)
+
+    def update(self, lista_eventos) -> None:
+    
+        self.bandera()
+        return super().update(lista_eventos)    
+
+
+    def bandera(self):
+
+        if self.vidas_enemigo < 0:
+            crear_bandera("bandera_3","true")

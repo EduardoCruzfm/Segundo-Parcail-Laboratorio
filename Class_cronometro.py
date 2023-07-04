@@ -1,5 +1,8 @@
 import pygame
 
+BLANCO = "White"
+NEGRO = "Black"
+
 class Cronometro:
     def __init__(self,tiempo_inicial) -> None:
         self.tiempo_acendente = tiempo_inicial
@@ -8,6 +11,7 @@ class Cronometro:
         # self.relog = pygame.time.Clock()
         self.tiempo_actual = pygame.time.get_ticks()
         self.detenido = False
+        self.color = BLANCO
 
     def actualizar(self):
         if self.detenido == False:
@@ -22,7 +26,7 @@ class Cronometro:
 
 
     def mostrar_tiempo(self,pantalla):
-        cronometro = self.fuente.render(f"0{self.minutos} : {str(self.tiempo_acendente)}",False,"White")
+        cronometro = self.fuente.render(f"0{self.minutos} : {str(self.tiempo_acendente)}",False,self.color)
         pantalla.blit(cronometro,(1500,6))
 
     def __str__(self) -> str:

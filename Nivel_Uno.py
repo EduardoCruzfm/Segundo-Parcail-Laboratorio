@@ -6,9 +6,11 @@ from configuraciones_enemigo import*
 from Clases_plataforma import*
 from Nivel_Base import*
 from Clase_enemigo import Enemigo
+from Clase_scorpion import*
 from configuracion_item_trampa import*
 from Clase_item import Item
 from Clase_trampa import Trampa
+from banderas import*
 
 class NivelUno(Nivel):
     def __init__(self, pantalla: pygame.Surface) -> None:
@@ -28,6 +30,7 @@ class NivelUno(Nivel):
 
         diccionario_animaciones = {}
         diccionario_animaciones["quieto"] = personaje_quieto
+        diccionario_animaciones["quieto_izq"] = personaje_sombrero_izquierda
         diccionario_animaciones["salta"] = personaje_salta
         diccionario_animaciones["camina_derecha"] = personaje_camina
         diccionario_animaciones["camina_izquierda"] = personaje_camina_izquiera
@@ -59,7 +62,7 @@ class NivelUno(Nivel):
         diccionario_animaciones_enemigo_obstaculo["camina_derecha"] = scorpion_ataca
         diccionario_animaciones_enemigo_obstaculo["camina_izquierda"] = scorpion_ataca
 
-        mi_enemigo_obstaculo = Enemigo(tamaño,diccionario_animaciones_enemigo_obstaculo,posicion_inicial_enemigo_obstaculo,10)
+        mi_enemigo_obstaculo = Escorpion(tamaño,diccionario_animaciones_enemigo_obstaculo,posicion_inicial_enemigo_obstaculo,10)
 
         lista_enemigos = [mi_enemigo,mi_enemigo_obstaculo]
         
@@ -97,4 +100,18 @@ class NivelUno(Nivel):
         segundos_4 = 4000
 
         super().__init__(pantalla, mi_personaje, lista_plataformas, fondo ,lista_items,lista_trampa,sombrero,segundos_4,lista_enemigos)
+
+
+    def update(self, lista_eventos) -> None:
+        self.bandera()
+        return super().update(lista_eventos)    
+
+    def actualizar_pantalla(self) -> None:
+
+        return super().actualizar_pantalla()
+
+    def bandera(self):
+        if self.vidas_enemigo < 0:
+            crear_bandera("bandera_1","true")
+
     

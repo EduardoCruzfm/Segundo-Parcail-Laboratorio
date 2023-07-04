@@ -6,9 +6,11 @@ from configuraciones_enemigo import*
 from Clases_plataforma import*
 from Nivel_Base import*
 from Clase_enemigo import Enemigo
+from Clase_nood import*
 from configuracion_item_trampa import*
 from Clase_item import Item
 from Clase_trampa import Trampa
+from banderas import*
 
 class NivelDos(Nivel):
     def __init__(self, pantalla: pygame.Surface) -> None:
@@ -28,6 +30,7 @@ class NivelDos(Nivel):
 
         diccionario_animaciones = {}
         diccionario_animaciones["quieto"] = personaje_quieto
+        diccionario_animaciones["quieto_izq"] = personaje_sombrero_izquierda
         diccionario_animaciones["salta"] = personaje_salta
         diccionario_animaciones["camina_derecha"] = personaje_camina
         diccionario_animaciones["camina_izquierda"] = personaje_camina_izquiera
@@ -38,7 +41,7 @@ class NivelDos(Nivel):
         sombrero = mi_personaje.sombrero_ataque
         
         #ENEMIGO
-        posicion_inicial_enemigo = (1500,150)
+        posicion_inicial_enemigo = (1500,130)
        
         diccionario_animaciones_enemigo = {}
         diccionario_animaciones_enemigo["quieto"] = enemigo_quieto_izquierda
@@ -59,29 +62,31 @@ class NivelDos(Nivel):
         diccionario_animaciones_enemigo_obstaculo["camina_derecha"] = nood_ataca
         diccionario_animaciones_enemigo_obstaculo["camina_izquierda"] = nood_ataca
 
-        mi_enemigo_obstaculo = Enemigo(tamaño,diccionario_animaciones_enemigo_obstaculo,posicion_inicial_enemigo_obstaculo,10)
+        mi_enemigo_obstaculo = Nood(tamaño,diccionario_animaciones_enemigo_obstaculo,posicion_inicial_enemigo_obstaculo,10)
 
         lista_enemigos = [mi_enemigo,mi_enemigo_obstaculo]
 
         # PLATAFORMA
-        plataforma_uno = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",1200,50,(100,735))
-        plataforma_dos = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",200,50,(1300,650))
+        plataforma_uno = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",400,50,(90,835))
+        plataforma_siete = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",400,50,(630,835))
+        plataforma_dos = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",200,500,(1100,650))
         plataforma_tres = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",200,50,(1000,500))
-        plataforma_cuatro = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",1700,20,(90,220))
+        plataforma_cuatro = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",1800,20,(50,200))
         plataforma_cinco = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",200,50,(500,400))
         plataforma_seis = Plataforma(r"Segundo-Parcail-Laboratorio\Fondo\4.jpg",200,50,(100,400))
 
         # LISTA DE PLATAFORMAS
-        lista_plataformas = [plataforma_uno,plataforma_dos,plataforma_tres,plataforma_cuatro,plataforma_cinco,plataforma_seis]
+        lista_plataformas = [plataforma_uno,plataforma_dos,plataforma_tres,plataforma_cuatro,plataforma_cinco,plataforma_seis,plataforma_siete]
 
         # ITEM
         diccionario_animaciones_item = {}
         diccionario_animaciones_item["gira"] = item
 
-        moneda = Item((30,30),diccionario_animaciones_item,(300,350))
-        moneda_dos = Item((30,30),diccionario_animaciones_item,(1600,550))
+        moneda = Item((30,30),diccionario_animaciones_item,(800,810))
+        moneda_dos = Item((30,30),diccionario_animaciones_item,(450,610))
+        moneda_tres = Item((30,30),diccionario_animaciones_item,(1600,550))
        
-        lista_items = [moneda,moneda_dos]
+        lista_items = [moneda,moneda_dos,moneda_tres]
 
         # TRAMPA
         diccionario_animaciones_trampa = {}
@@ -94,4 +99,15 @@ class NivelDos(Nivel):
 
         segundos_3 = 3000
 
-        super().__init__(pantalla, mi_personaje, lista_plataformas, fondo ,lista_items,lista_trampa,sombrero,segundos_3,lista_enemigos) 
+        super().__init__(pantalla, mi_personaje, lista_plataformas, fondo ,lista_items,lista_trampa,sombrero,segundos_3,lista_enemigos)
+        
+    def update(self, lista_eventos) -> None:
+    
+        self.bandera()
+        return super().update(lista_eventos)    
+
+
+    def bandera(self):
+
+        if self.vidas_enemigo < 0:
+            crear_bandera("bandera_2","true") 

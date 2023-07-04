@@ -6,17 +6,10 @@ class Enemigo(Personaje):
     def __init__(self, tamaño, animaciones, posicion_inicial, velocidad) -> None:
         super().__init__(tamaño, animaciones, posicion_inicial, velocidad)
         # SHAO
-        self.lista_burbuja = pygame.sprite.Group()
+        self.ataque = pygame.sprite.Group()
         self.burbuja_verde = ""
-        # SCORPION
-        self.lista_lanza = pygame.sprite.Group()
-        self.lanza = ""
-        # NOOD
-        self.lista_cuchillo = pygame.sprite.Group()
-        self.cuchillos = ""
-
-
-
+       
+        
     def animar(self,pantalla,que_animacio:str):
         animacion = self.animaciones[que_animacio]
         largo = len(animacion)
@@ -33,8 +26,7 @@ class Enemigo(Personaje):
 
             case "ataca":     
                     self.animar(pantalla,"gira_ataca")
-                    # self.burbuja()
-
+                    # self.sonido()
             case "quieto":
                     self.animar(pantalla,"quieto")
                 
@@ -46,17 +38,11 @@ class Enemigo(Personaje):
         self.limites_x_enemigo()
 
 
-    def burbuja(self):
+    def proyectil(self):
         self.burbuja_verde = Sombrero(r"Segundo-Parcail-Laboratorio\Ataque_Shao_kanh\0.png",(30,30),(self.rectangulo),-30)
-        self.lista_burbuja.add(self.burbuja_verde)
+        self.ataque.add(self.burbuja_verde)
 
-    def scorpion(self):
-        self.lanza = Sombrero(r"Segundo-Parcail-Laboratorio\Scorpion_ataqua\4.png",(200,30),(self.rectangulo),30)
-        self.lista_lanza.add(self.lanza)
-
-    def cuchillo(self):
-        self.cuchillos = Sombrero(r"Segundo-Parcail-Laboratorio\Nood_ataca\7.png",(200,30),(self.rectangulo),30)
-        self.lista_cuchillo.add(self.cuchillos)
+    
 
     def mover_x(self,velocidad):
          
@@ -69,3 +55,9 @@ class Enemigo(Personaje):
 
         if self.rectangulo.x < 100:
             self.mover_x(100)
+
+    def sonido(self):
+        sonido_sombrero = pygame.mixer.Sound(r"Segundo-Parcail-Laboratorio\Musica\sfx_KL_dive_kick_whsh01.wav")
+        sonido_sombrero.set_volume(0.2)
+        canal = pygame.mixer.find_channel()
+        canal.play(sonido_sombrero)

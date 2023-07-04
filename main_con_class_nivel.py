@@ -27,8 +27,14 @@ def inciar_juego()->None:
         RELOG = pygame.time.Clock()
         PANTALLA = pygame.display.set_mode(TAMAÑO_PANTALLA)
 
-        form_prueba = FormPrueba(PANTALLA,500,300,900,350,(70,6,6),(171,1,1),5,True)
+        # form_prueba = FormPrueba(PANTALLA,500,300,900,350,(70,6,6),(171,1,1),5,True)
+        # form_prueba = FormPrueba(PANTALLA,550,200,800,550,(70,6,6),(171,1,1),5,True)
+        form_prueba = FormPrueba(PANTALLA,550,200,800,550,(70,6,6),(171,1,1),5,True)
 
+        pausa = pygame.image.load(r"Segundo-Parcail-Laboratorio\Menu\9.png")
+        pausa = pygame.transform.scale(pausa,(500,500))
+
+        is_paused = False
         flag = True
         while flag:
             RELOG.tick(FPS)
@@ -38,17 +44,28 @@ def inciar_juego()->None:
                 if evento.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit(0)
+
+                elif evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_c:
+                        is_paused = not is_paused
+                    
+
             PANTALLA.fill("Black")
             
-            form_prueba.update(lista_eventos)
+            if not is_paused:
+                form_prueba.update(lista_eventos)
+
+            else:
+                # Mostrar mensaje de pausa
+                PANTALLA.blit(pausa, (700,200))
             
             pygame.display.update()
 
     except ModuleNotFoundError as e:
         print(f"Error en el modulo: tipo de error -> {e}")
 
-    except Exception as e:
-        print(f"Error analizar {e}")
+    # except Exception as e:
+    #     print(f"Error analizar {e}")
     finally:
         print("PARCIAL 2")
     

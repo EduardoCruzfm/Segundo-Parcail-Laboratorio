@@ -33,7 +33,7 @@ with sqlite3.connect("mi_base_de_datos.db") as conexion:
         #             select * from Ranking limit 2
         #             '''
         sentencia = '''
-                    select * from Ranking order by score desc limit 2
+                    select * from Ranking order by score desc limit 3
                     '''
         cursor = conexion.execute(sentencia)
         for fila in cursor:

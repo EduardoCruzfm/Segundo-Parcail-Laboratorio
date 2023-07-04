@@ -3,6 +3,10 @@ from pygame.locals import*
 from API_FORMS.GUI_form import*
 from API_FORMS.GUI_button_image import*
 
+from API_FORMS.GUI_form_fin import*
+from Manejador_niveles import*
+
+
 class FormContenedorNivel(Form):
     def __init__(self,pantalla:pygame.Surface,nivel):
         super().__init__(pantalla,0,0,pantalla.get_width(),pantalla.get_height(),color_background="Black")
@@ -20,14 +24,32 @@ class FormContenedorNivel(Form):
                                       onclick_param="",
                                       path_image=r"Segundo-Parcail-Laboratorio\Moneda_vida\2.png")
         
+        dic = [{"clave": "pepe","punot":"cdcd"}]
+
+
+        self.form_jugar = FormFin(self._master,690,205,500,550,(220,0,220),
+                                 "white",True,r"Segundo-Parcail-Laboratorio\Menu\0.png",
+                                 dic,100,10,10)
+        
         self.lista_widgets.append(self._btn_home)
+
         
     def update(self,lista_eventos):
-        self.nivel.update(lista_eventos)
+        self.nivel.update(lista_eventos)     
 
         for widget in self.lista_widgets:
             widget.update(lista_eventos)
         self.draw()
+
+        if self.nivel.vidas_jugador == 0:
+
+            # print("murio") 
+            # self.show_dialog(self.form_jugar)
+            # self.end_dialog()
+            pass
+        # if self.nivel.bandera_1 == True:
+        #     print("TRueeeeeee")    
+            
 
     def btn_home_click(self,param):
         self.end_dialog()

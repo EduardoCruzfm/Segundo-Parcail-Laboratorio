@@ -89,14 +89,15 @@ class Personaje:
                 if not self.esta_saltando:
               
                     self.animar(pantalla,"quieto")
-            case "quieto":#-------------------------
+            case "quieto_izq":#-------------------------
                 if not self.esta_saltando:
-                    self.animar(pantalla,"quieto")
+                    self.animar(pantalla,"quieto_izq")
+                    self.sombrero(-20)
 
             case "sombrero":
                 if not self.esta_saltando:
                     self.animar(pantalla,"sombrero_ataca")
-                    self.sombrero()
+                    self.sombrero(20)
                     
                     sonido_sombrero = pygame.mixer.Sound(r"Segundo-Parcail-Laboratorio\Musica\sfx_KL_charselect_hat_catch.wav")
                     sonido_sombrero.set_volume(0.2)
@@ -140,9 +141,9 @@ class Personaje:
             
         # colicon de enemigo  y personaje
 
-    def sombrero(self):
+    def sombrero(self,velocidad):
         
-        self.sombrero_ataque = Sombrero(r"Segundo-Parcail-Laboratorio\Sombrero\3.png",(30,30),(self.rectangulo),20)
+        self.sombrero_ataque = Sombrero(r"Segundo-Parcail-Laboratorio\Sombrero\3.png",(30,30),(self.rectangulo),velocidad)
         self.lista_sombrero.add(self.sombrero_ataque)
 
        

@@ -84,3 +84,5 @@ personaje_sombrero = [pygame.image.load(r"Segundo-Parcail-Laboratorio\Ataque_som
                       pygame.image.load(r"Segundo-Parcail-Laboratorio\Ataque_sombrero\1.png")
                                         
                     ]
+
+personaje_sombrero_izquierda = girar_imagenes(personaje_sombrero,True,False)
