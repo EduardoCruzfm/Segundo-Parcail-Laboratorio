@@ -25,21 +25,21 @@ class Enemigo(Personaje):
         match self.que_hace:
 
             case "ataca":     
-                    self.animar(pantalla,"gira_ataca")
+                    self.animar(pantalla,"camina_derecha")
                     # self.sonido()
             case "quieto":
                     self.animar(pantalla,"quieto")
                 
             case "ataca_derecha":
-                  self.animar(pantalla,"camina_derecha")
+                  self.animar(pantalla,"gira_ataca")
                   
 
         self.aplicar_gravedad(pantalla,lista_plataformas)
         self.limites_x_enemigo()
 
 
-    def proyectil(self):
-        self.burbuja_verde = Sombrero(r"Segundo-Parcail-Laboratorio\Ataque_Shao_kanh\0.png",(30,30),(self.rectangulo),-30)
+    def proyectil(self,velocidad=30):
+        self.burbuja_verde = Sombrero(r"Segundo-Parcail-Laboratorio\Ataque_Shao_kanh\0.png",(30,30),(self.rectangulo),velocidad)
         self.ataque.add(self.burbuja_verde)
 
     

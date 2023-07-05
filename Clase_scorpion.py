@@ -11,8 +11,8 @@ class Escorpion(Enemigo):
         self.lanza = ""
 
     
-    def proyectil(self):
-        self.lanza = Sombrero(r"Segundo-Parcail-Laboratorio\Scorpion_ataqua\4.png",(200,30),(self.rectangulo),30)
+    def proyectil(self,velocidad=30):
+        self.lanza = Sombrero(r"Segundo-Parcail-Laboratorio\Scorpion_ataqua\4.png",(200,30),(self.rectangulo),velocidad)
         self.ataque.add(self.lanza)
 
     def sonido(self):

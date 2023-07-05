@@ -11,6 +11,12 @@ class Nood(Enemigo):
         self.cuchillos = ""
 
     
-    def proyectil(self):
-        self.cuchillos = Sombrero(r"Segundo-Parcail-Laboratorio\Nood_ataca\7.png",(50,10),(self.rectangulo),30)
+    def proyectil(self,velocidad=30):
+        self.cuchillos = Sombrero(r"Segundo-Parcail-Laboratorio\Ataque_Shao_kanh\0.png",(50,50),(self.rectangulo),velocidad)
         self.ataque.add(self.cuchillos)
+
+    def sonido(self):
+        sonido_sombrero = pygame.mixer.Sound(r"Segundo-Parcail-Laboratorio\Musica\mk2-00842.mp3")
+        sonido_sombrero.set_volume(0.2)
+        canal = pygame.mixer.find_channel()
+        canal.play(sonido_sombrero)

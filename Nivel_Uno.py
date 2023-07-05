@@ -47,7 +47,7 @@ class NivelUno(Nivel):
         diccionario_animaciones_enemigo["quieto"] = motaro_quieto_izquieda
         diccionario_animaciones_enemigo["gira_ataca"] = motaro_ataca_izquieda
         diccionario_animaciones_enemigo["salta"] = personaje_salta
-        diccionario_animaciones_enemigo["camina_derecha"] = motaro_quieto
+        diccionario_animaciones_enemigo["camina_derecha"] = motaro_ataca
         diccionario_animaciones_enemigo["camina_izquierda"] = enemigo_ataca_izquieda
 
         mi_enemigo = Enemigo(tamaño_dos,diccionario_animaciones_enemigo,posicion_inicial_enemigo,40)
@@ -97,13 +97,18 @@ class NivelUno(Nivel):
 
         lista_trampa = [trampa_uno,trampa_dos]
         
-        segundos_4 = 4000
+        segundos_4 = 3000
 
         super().__init__(pantalla, mi_personaje, lista_plataformas, fondo ,lista_items,lista_trampa,sombrero,segundos_4,lista_enemigos)
+
+        # EVENTO POR TIEMPO N2
+        self.timer_nivel_1= pygame.USEREVENT + 4
+        pygame.time.set_timer(self.timer_nivel_1, 3000)
 
 
     def update(self, lista_eventos) -> None:
         self.bandera()
+        self.movimiento_aleatorio(lista_eventos)
         return super().update(lista_eventos)    
 
     def actualizar_pantalla(self) -> None:
@@ -114,4 +119,15 @@ class NivelUno(Nivel):
         if self.vidas_enemigo < 0:
             crear_bandera("bandera_1","true")
 
+    def movimiento_aleatorio(self,lista_eventos):
+        for evento in lista_eventos:
+            if evento.type == self.timer_nivel_1:   
+                
+                print("Disparo")
+
+                for lista in self.lista_enemigos[1:]:
+                    
+                    lista.que_hace = "ataca_derecha"
+                    lista.proyectil()
+                    lista.sonido()
     

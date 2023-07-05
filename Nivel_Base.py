@@ -68,45 +68,26 @@ class Nivel:
                 if evento.key == pygame.K_TAB:
                     cambiar_modo()
 
-            if evento.type == self.timer_event_moviento_enemigo:            
+            # if evento.type == self.timer_event_moviento_enemigo:            
+            if evento.type == self.timer_event :            
                 if self.bandera_timer:
                     self.numero_aleatorio = random.randint(1,2)
                     # MOVIMIENTO ALEATORIO
                     match self.numero_aleatorio:
                         case 1:
                             self.lista_enemigos[0].que_hace = "ataca_derecha"
-                            self.lista_enemigos[0].mover_x(300)
-                            
-                            # if len(self.lista_enemigos) == 1:
-                            #     self.lista_enemigos[1].que_hace = "quieto"
+                            self.lista_enemigos[0].mover_x(210)
+                            self.lista_enemigos[0].proyectil(-30)
+                           
                         case 2 :
                             self.lista_enemigos[0].que_hace = "ataca"
                             self.lista_enemigos[0].mover_x(-190)
+                            self.lista_enemigos[0].proyectil()
 
-                        #     if len(self.lista_enemigos) == 1:
-                        #         self.lista_enemigos[1].que_hace = "quieto"
-                        # case 3:
+                        case 3:
                             for enemigo in self.lista_enemigos:
                                 enemigo.que_hace = "quieto"
 
-            # CADA 5 SEG DISPARO
-            if evento.type == self.timer_event:
-                if self.bandera_timer:
-                    print("Disparo")
-
-                    for lista in self.lista_enemigos:
-                        lista.que_hace = "quieto"
-                        lista.proyectil()
-                        lista.sonido()
-
-
-                    # self.lista_enemigos[0].que_hace = "quieto"
-                    # self.lista_enemigos[0].proyectil()
-                    # self.lista_enemigos[0].sonido()
-                    # if len(self.lista_enemigos) > 0:
-                    #     self.lista_enemigos[1].que_hace = "ataca_derecha"
-                    #     self.lista_enemigos[1].proyectil()
-                    #     self.lista_enemigos[1].sonido()
 
         # LLAMADA
         self.leer_inputs()
@@ -266,14 +247,23 @@ class Nivel:
 
             if self.vidas_enemigo < 0:
                 self.vidas_enemigo = 0
-                
+
+
             # SI COLICIONA EL ATAQUE DEL JUGADOR CON EL ENEMIGO
-            
+            for sombrero in self.jugador.lista_sombrero:        
+                if self.lista_enemigos[0].lados["left"].colliderect(sombrero.rect):
+                    print("COLICIONO EL SOMBRERO")
+                    self.vidas_enemigo -= 0.5
+                    self.puntos_jugador += 200
+                    sombrero.eliminar()
+
+
+            # SI COLICIONA EL ATAQUE DEL JUGADOR CON EL ENEMIGO
             for sombrero in self.jugador.lista_sombrero: 
                 for enemigo in self.lista_enemigos:
                     if enemigo.lados["left"].colliderect(sombrero.rect):
                         print("COLICIONO EL SOMBRERO")
-                        self.vidas_enemigo -= 0.5
+                        # self.vidas_enemigo -= 0.5
                         self.vidas_enemigo_dos -= 0.5
                         self.puntos_jugador += 200
                         sombrero.eliminar()

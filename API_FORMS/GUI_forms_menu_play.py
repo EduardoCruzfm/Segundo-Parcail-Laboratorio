@@ -71,7 +71,7 @@ class FormMenuPlay(Form):
     def entrar_nivel_2(self,nombre_nivel):
 
         bandera_1 = leer_bandera("bandera_1")
-        if bandera_1[0] == "false":
+        if bandera_1[0] == "true":
 
             print("entre nivel 2")
             nivel_2 = self.manejador_niveles.get_nivel_2()
